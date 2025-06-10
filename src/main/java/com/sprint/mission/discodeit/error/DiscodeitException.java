@@ -40,4 +40,14 @@ public class DiscodeitException extends RuntimeException {
         key,
         value);
   }
+
+  public DiscodeitException(ErrorCode errorCode, Map<String, Object> details) {
+    this(errorCode);
+    this.details.putAll(details);
+  }
+
+  public DiscodeitException(ErrorCode errorCode, Map<String, Object> details, Throwable cause) {
+    this(errorCode, cause);
+    this.details.putAll(details);
+  }
 }
