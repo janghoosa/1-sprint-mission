@@ -25,6 +25,9 @@ public class BinaryContent extends BaseEntity implements Serializable {
   private String filePath;
   private Long size;
 
+  @Enumerated(EnumType.STRING)
+  private UploadStatus uploadStatus;
+
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Message message;
 
@@ -48,5 +51,9 @@ public class BinaryContent extends BaseEntity implements Serializable {
     this.fileName = fileName;
     this.mimeType = mimeType;
     this.filePath = filePath;
+  }
+
+  public void updateUploadStatus(UploadStatus uploadStatus) {
+    this.uploadStatus = uploadStatus;
   }
 }

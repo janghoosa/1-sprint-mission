@@ -37,3 +37,8 @@ discodeit:
       region: ${S3_REGION}
       bucket: ${S3_BUCKET}
 
+security:
+  jwt:
+    secret: hihihhihih
+    access-token-validity-seconds: 600
+    refresh-token-validity-seconds: 6000

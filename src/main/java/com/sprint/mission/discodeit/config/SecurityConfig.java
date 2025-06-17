@@ -42,16 +42,6 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-  private final LoginAuthenticationProvider loginAuthenticationProvider;
-
-  @Bean
-  public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-    return http.getSharedObject(AuthenticationManagerBuilder.class)
-        .authenticationProvider(loginAuthenticationProvider)
-        .build();
-  }
-
   @Bean
   public SecurityFilterChain filterChain(
       HttpSecurity http,

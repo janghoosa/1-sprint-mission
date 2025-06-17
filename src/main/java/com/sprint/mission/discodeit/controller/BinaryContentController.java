@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +30,8 @@ public class BinaryContentController implements BinaryContentApi {
 
   @Override
   public ResponseEntity<BinaryContentResponse> saveBinaryContent(BinaryContent binaryContent) {
+    String requestId = UUID.randomUUID().toString();
+    MDC.put("requestId", requestId);
     BinaryContentResponse savedBinaryContent = binaryContentService.saveBinaryContent(
         binaryContent);
     return ResponseEntity.ok(savedBinaryContent);

@@ -5,8 +5,7 @@ plugins {
 }
 
 group = 'com.sprint.mission'
-version = '2.0-M9'
-
+version = '2.3-M11'
 
 java {
     toolchain {
@@ -24,44 +23,78 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    springBootVersion = '3.4.0'
+    springDependencyManagementVersion = '1.1.7'
+    springRetryVersion = '2.0.12'
+    springDocVersion = '2.8.4'
+    awsSdkVersion = '2.31.7'
+    nimbusJwtVersion = '10.3'
+    testcontainersVersion = '1.11.3'
+    lombokVersion = '1.18.30'
+    mapstructVersion = '1.6.3'
+    localstackUtilsVersion = '0.2.20'
+    junitPlatformVersion = '1.11.1'
+}
+
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
+    // Spring Boot
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+
+    // Retry
+    implementation "org.springframework.retry:spring-retry:${springRetryVersion}"
+
+    // SpringDoc (OpenAPI)
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}"
+
+    // Database
     implementation 'org.postgresql:postgresql'
-    implementation 'software.amazon.awssdk:s3:2.31.7'
-    implementation 'com.nimbusds:nimbus-jose-jwt:10.3'
+    implementation 'com.h2database:h2' // Test
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    implementation("org.mapstruct:mapstruct:1.6.3")
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+    // AWS
+    implementation "software.amazon.awssdk:s3:${awsSdkVersion}"
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation("org.springframework.security:spring-security-test")
-    testImplementation 'com.h2database:h2'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
+    // JWT
+    implementation "com.nimbusds:nimbus-jose-jwt:${nimbusJwtVersion}"
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // Mapstruct
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+    // Test
+    testImplementation "org.junit.jupiter:junit-jupiter:5.8.1"
+    testImplementation "org.testcontainers:testcontainers:1.21.1"
+    testImplementation "org.testcontainers:localstack:1.21.1"
+    testImplementation "org.testcontainers:junit-jupiter:1.21.1"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.security:spring-security-test"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher:${junitPlatformVersion}"
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-test {
-    useJUnitPlatform()
+ext {
+    ARCHIVE_FILE_NAME = 'app.jar'
 }
 
 bootJar {
-    archiveFileName = 'app.jar'
+    archiveFileName = ARCHIVE_FILE_NAME
 }
 
-tasks.register('copyJarToDockerContext', Copy) {
+tasks.register('copyAppJarToDockerContext', Copy) {
     dependsOn bootJar
-    from layout.buildDirectory.file("libs/app.jar")
+    from layout.buildDirectory.file("libs/${ARCHIVE_FILE_NAME}")
     into "."
 }

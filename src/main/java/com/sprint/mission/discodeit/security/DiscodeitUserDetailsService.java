@@ -5,6 +5,7 @@ import com.sprint.mission.discodeit.error.exception.user.UserNotFoundException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DiscodeitUserDetailsService implements UserDetailsService {
 
   private final UserRepository userRepository;
-  private final UserMapper userMapper;
+  private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
   @Transactional(readOnly = true)
   @Override

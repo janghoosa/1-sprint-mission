@@ -44,7 +44,8 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+  public ResponseEntity<ErrorResponse> handleValidationExceptions(
+      MethodArgumentNotValidException ex) {
     log.error(
         "요청 유효성 검사 실패: {}",
         ex.getMessage());
@@ -80,7 +81,8 @@ public class GlobalExceptionHandler {
            READ_STATUS_NOT_FOUND, USER_STATUS_NOT_FOUND -> HttpStatus.NOT_FOUND;
       case DUPLICATE_USER, DUPLICATE_READ_STATUS, DUPLICATE_USER_STATUS, DUPLICATE_CHANNEL_NAME ->
           HttpStatus.CONFLICT;
-      case INVALID_USER_CREDENTIALS, CHANNEL_ACCESS_DENIED -> HttpStatus.UNAUTHORIZED;
+      case INVALID_USER_CREDENTIALS, CHANNEL_ACCESS_DENIED, INVALID_TOKEN_SECRET, INVALID_TOKEN,
+           TOKEN_NOT_FOUND -> HttpStatus.UNAUTHORIZED;
       case PRIVATE_CHANNEL_UPDATE, INVALID_REQUEST -> HttpStatus.BAD_REQUEST;
       case INTERNAL_SERVER_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
     };

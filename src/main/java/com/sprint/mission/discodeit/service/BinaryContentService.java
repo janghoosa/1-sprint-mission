@@ -4,6 +4,7 @@ import com.sprint.mission.discodeit.dto.binarycontetnt.BinaryContentResponse;
 import com.sprint.mission.discodeit.dto.binarycontetnt.CreateBinaryContentRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 
+import com.sprint.mission.discodeit.entity.UploadStatus;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,4 +23,6 @@ public interface BinaryContentService {
   List<BinaryContentResponse> getBinaryContentListByIds(List<UUID> ids);
 
   ResponseEntity<?> downloadBinaryContent(UUID id);
+
+  void updateStatus(java.util.UUID binaryContentId, UploadStatus uploadStatus);
 }

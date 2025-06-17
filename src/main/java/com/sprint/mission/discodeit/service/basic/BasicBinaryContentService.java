@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.dto.binarycontetnt.BinaryContentResponse;
 import com.sprint.mission.discodeit.dto.binarycontetnt.CreateBinaryContentRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.entity.UploadStatus;
 import com.sprint.mission.discodeit.mapper.BinaryContentMapper;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.service.BinaryContentService;
@@ -33,7 +34,9 @@ public class BasicBinaryContentService implements BinaryContentService {
     BinaryContent binaryContent = new BinaryContent(fileName, contentType);
     try {
       UUID fileUUID = binaryContentStorage.put(binaryContent.getId(), bytes);
+      binaryContent.updateUploadStatus(UploadStatus.SUCCESS);
     } catch (IOException e) {
+      binaryContent.updateUploadStatus(UploadStatus.FAILED);
       throw new RuntimeException(e);
     }
     return BinaryContentMapper.INSTANCE.toBinaryContentResponse(
@@ -76,5 +79,12 @@ public class BasicBinaryContentService implements BinaryContentService {
     BinaryContent binaryContent = binaryContentRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Binary content not found"));
     return binaryContentStorage.download(BinaryContentResponse.fromEntity(binaryContent));
+  }
+
+  @Override
+  public void updateStatus(UUID binaryContentId, UploadStatus uploadStatus) {
+    BinaryContent binaryContent = binaryContentRepository.findById(binaryContentId)
+        .orElseThrow(() -> new EntityNotFoundException("Binary content not found"));
+    binaryContent.updateUploadStatus(uploadStatus);
   }
 }

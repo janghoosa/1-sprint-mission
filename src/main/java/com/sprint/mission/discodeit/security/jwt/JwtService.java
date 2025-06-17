@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,19 +37,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class JwtService {
 
   public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
-
+  private final JwtSessionRepository jwtSessionRepository;
+  private final UserRepository userRepository;
+  private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+  private final ObjectMapper objectMapper;
+  private final JwtBlacklist jwtBlacklist;
   @Value("${security.jwt.secret}")
   private String secret;
   @Value("${security.jwt.access-token-validity-seconds}")
   private long accessTokenValiditySeconds;
   @Value("${security.jwt.refresh-token-validity-seconds}")
   private long refreshTokenValiditySeconds;
-
-  private final JwtSessionRepository jwtSessionRepository;
-  private final UserRepository userRepository;
-  private final UserMapper userMapper;
-  private final ObjectMapper objectMapper;
-  private final JwtBlacklist jwtBlacklist;
 
   @Transactional
   public JwtSession registerJwtSession(UserResponse userDto) {
