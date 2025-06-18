@@ -31,7 +31,9 @@ public class BasicReadStatusService implements ReadStatusService {
     Channel channel = channelService.getChannel(request.channelId());
 
     Instant lastReadTime = request.lastReadTime();
-    ReadStatus readStatus = new ReadStatus(user, channel, lastReadTime);
+    // PRIVATE일때
+    Boolean isPrivate = channel.isPrivate();
+    ReadStatus readStatus = new ReadStatus(user, channel, lastReadTime, isPrivate);
 
     return readStatusRepository.save(readStatus);
   }
